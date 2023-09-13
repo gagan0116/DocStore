@@ -7,7 +7,6 @@ const bodyParser = require('body-parser');
 
 const app = express();
 const port = process.env.PORT || 80;
-
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -52,23 +51,22 @@ app.get('/retrieveFiles/:category', (req, res) => {
       res.status(500).send('An error occurred while retrieving files.');
     } else {
       const files = data.Contents.map(file => ({
-        name: file.Key, // File name
-        url: `https://${params.Bucket}.s3.amazonaws.com/${file.Key}`, // S3 file URL
+        name: file.Key, 
+        url: `https://${params.Bucket}.s3.amazonaws.com/${file.Key}`, 
       }));
 
       const fileLinks = files.map(file => `
         <div style="border: 1px solid #ccc; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
           <a href="${file.url}" target="_blank" style="text-decoration: none; color: #007bff; margin-right: 100px;">${file.name}</a>
           <a href="/download/${encodeURIComponent(file.name)}" download style="text-decoration: none; color: #007bff;">Download</a>
+          <a href="/delete/${category}/${encodeURIComponent(file.name)}" style="text-decoration: none; color: #ff0000;padding-left: 25px">Delete</a>
         </div>
       `);
 
       const formattedCategory = category.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, (match) => match.toUpperCase());
 
-      // Create a heading with the formatted category name
       const heading = `<h1 style ="text-align: center">${formattedCategory}</h1>`;
 
-      // Wrap the content in a centered div
       const centeredContent = `
         <div style="display: flex; justify-content: center; align-items: center;">
           <div>
@@ -83,14 +81,37 @@ app.get('/retrieveFiles/:category', (req, res) => {
   });
 });
 
-// Add a route for file downloads
+app.get('/delete/:category/:fileName', (req, res) => {
+  const category = req.params.category;
+  const fileName = req.params.fileName;
+
+
+  const s3Key = `${category}/${fileName}`;
+  const objectsToDelete = [{ Key: s3Key }];
+
+  const deleteParams = {
+    Bucket: 'docstore-service',
+    Delete: {
+      Objects: objectsToDelete,
+    },
+  };
+
+  s3.deleteObjects(deleteParams, (err, data) => {
+    if (err) {
+      console.error('Error deleting file from S3:', err);
+      res.status(500).send('An error occurred while deleting the file.');
+    } else {
+      console.log('File deleted successfully from S3:', s3Key);
+      res.redirect(`/retrieveFiles/${category}`);
+    }
+  });
+});
+
 app.get('/download/:fileName', (req, res) => {
   const fileName = req.params.fileName;
 
-  // Set the S3 object key based on the category and file name
   const s3Key = `${fileName}`;
 
-  // Create a signed URL for the S3 object
   const s3Params = {
     Bucket: 'docstore-service',
     Key: s3Key,
@@ -102,7 +123,7 @@ app.get('/download/:fileName', (req, res) => {
       console.error('Error generating signed URL:', err);
       res.status(500).send('An error occurred while generating the download link.');
     } else {
-      // Redirect the user to the signed URL for downloading the file
+  
       res.redirect(url);
     }
   });
