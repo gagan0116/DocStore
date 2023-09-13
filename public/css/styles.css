@@ -1,0 +1,103 @@
+/* Add your custom CSS styles here */
+
+/* Center the container vertically and horizontally */
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Style the form */
+form {
+    max-width: 400px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border: 1px solid #d6d6d6;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style the form header */
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Style the file input */
+.form-group input[type="file"] {
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #ffffff;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Style the submit button */
+button[type="submit"] {
+    margin-top: 15px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Style error messages (customize as needed) */
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+#sidebar {
+    background-color: #F0F0F0; /* Replace with your desired background color */
+    color: #213555; /* Text color */
+    padding-top: 20px;
+    position: fixed; /* Fixed position */
+    height: 100%; /* Full height */
+}
+
+#sidebar h1 {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 30px;
+    color:#213555 
+}
+
+#sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#sidebar ul li {
+    margin-bottom: 5px;
+}
+
+
+#sidebar a {
+    font-weight: bold;
+    font-size: 1rem;
+    color: #4F709C;
+    display: block;
+    padding: 4px 15px;
+}
+
+#sidebar a:hover {
+    background-color: #4F709C; /* Background color on hover */
+    color: #F0F0F0;
+    border-radius: 10px;
+}
+
+#content {
+    margin-left: 250px;
+}
+
